@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService implements UserRepository {
 
     @Autowired
@@ -34,7 +36,7 @@ public class UserService implements UserRepository {
     //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    @Transactional
+
     public Optional<Users> findByUserName(String name) {
         String hqlRequest = "from Users U JOIN FETCH U.roles where U.name =:name";
         //return sessionFactory.getCurrentSession().get(Users.class,id);
@@ -60,7 +62,7 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    @Transactional
+
     public Optional<Users> findById(Long id) {
         String hqlRequest = "from Users U JOIN FETCH U.roles where U.id =:id";
         //return sessionFactory.getCurrentSession().get(Users.class,id);
@@ -70,18 +72,25 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Set<Users> findAllUsers() {
-        /*String hqlRequest = "from Users U JOIN FETCH U.roles";
+
+    public List<Users> findAllUsers() {
+        String hqlRequest = "from Users U JOIN FETCH U.roles";
         Query query = sessionFactory.getCurrentSession().createQuery(hqlRequest);
-        return (Set<Users>) query.getResultStream().collect(Collectors.toSet());*/
+        //return (Set<Users>) query.getResultStream().collect(Collectors.toSet());
+        List<Users> list  =   query.getResultList();
+        System.out.println(list.get(0).getRoles());
+        return list;
+
 
         /*String hqlRequest = "from Users U JOIN FETCH U.roles order by U.name";
         ScrollableResults results = sessionFactory.getCurrentSession().createQuery(hqlRequest).scroll(ScrollMode.FORWARD_ONLY);*/
 
         /*CriteriaBuilder builder =sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<Users> usersCriteriaQuery = builder.createQuery(Users.class);*/
-
+        CriteriaQuery<Users> usersCriteriaQuery = builder.createQuery(Users.class);
+        Root<Users> root = usersCriteriaQuery.from(Users.class);
+        usersCriteriaQuery.select(root);
+        Query query = sessionFactory.getCurrentSession().createQuery(usersCriteriaQuery);
+        return (Set<Users>) query.getResultStream().collect(Collectors.toSet());*/
 
 
 
@@ -90,7 +99,7 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    @Transactional
+
     public boolean saveUser(Users user) {
         Optional<Users> newUser = this.findByUserName(user.getName());
         if(!newUser.isPresent()){
@@ -110,7 +119,7 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    @Transactional
+
     public void deleteByUserName(String name) {
         Optional<Users> deleteUser = this.findByUserName(name);
         if(deleteUser.isPresent()){

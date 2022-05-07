@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,7 +50,10 @@ public class SecurityWithHibernateApplication implements CommandLineRunner {
 
 		//userService.findByUserName("adminName").ifPresent(System.out::println);
 
-		userService.deleteByUserName("admin2");
+		//userService.deleteByUserName("admin2");
+
+		List<Users> users = userService.findAllUsers();
+		System.out.println(users);
 
 	}
 }

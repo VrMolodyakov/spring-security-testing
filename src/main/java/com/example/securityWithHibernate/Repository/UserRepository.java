@@ -3,6 +3,7 @@ package com.example.securityWithHibernate.Repository;
 import com.example.securityWithHibernate.Model.Users;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ public interface UserRepository {
     Users findByUserEmail(String email);
     boolean deleteUserById(Long id);
     Optional<Users> findById(Long id);
-    Set<Users> findAllUsers();
+    List<Users> findAllUsers();
     boolean saveUser(Users user);
     void deleteByUserName(String name);
 }

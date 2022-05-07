@@ -1,6 +1,9 @@
 package com.example.securityWithHibernate.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,8 +26,9 @@ public class Roles {
     @Column(name = "role_name")
     private String role;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "roles")
-    private Set<Users> users;
+    private List<Users> users;
 
     public Long getId() {
         return id;
@@ -42,11 +46,11 @@ public class Roles {
         this.role = role;
     }
 
-    public Set<Users> getUsers() {
+    public List<Users> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<Users> users) {
+    public void setUsers(List<Users> users) {
         this.users = users;
     }
 
